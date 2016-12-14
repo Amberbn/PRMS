@@ -1,0 +1,35 @@
+﻿@model adminlte.Models.Mst_CommPlan
+
+@{
+    ViewBag.Title = "Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>Mst_CommPlan</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.CommPlanDesc)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.CommPlanDesc)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.isActive)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.isActive)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.CommPlanid }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

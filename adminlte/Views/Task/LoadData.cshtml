@@ -1,0 +1,61 @@
+﻿@model IEnumerable<adminlte.Models.Tbl_Task>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table col-md-10">
+    <tr>
+        <th>
+            @Html.LabelFor(model => model.FirstOrDefault().TaskId,"Task Id")
+        </th>
+        <th>
+            @Html.LabelFor(model => model.FirstOrDefault().TaskName,"Task Name")
+        </th>
+        
+       
+        <th>
+           @Html.LabelFor(model => model.FirstOrDefault().Description,"Description")
+        </th>
+       
+        <th>
+            @Html.LabelFor(model => model.FirstOrDefault().ActionDesc,"Action Description")
+        </th>
+        <th>
+            @Html.LabelFor(model => model.FirstOrDefault().Periode,"Periode")
+        </th>
+        <th><label>Detail</label></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.TaskId)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.TaskName)
+        </td>
+        
+        <td>
+            @Html.DisplayFor(modelItem => item.Description)
+        </td>
+        
+        <td>
+            @Html.DisplayFor(modelItem => item.ActionDesc)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Periode)
+        </td>
+        <td>
+           @if (item.ActionDesc=="Reject") {
+            @Html.ActionLink("Detail", "TrxCommPlanEdit", new { id = item.TaskId })
+           }
+           else
+           {
+            @Html.ActionLink("Detail", "TrxCommPlan", new { id = item.TaskId })
+           }
+
+        </td>
+    </tr>
+}
+
+</table>
