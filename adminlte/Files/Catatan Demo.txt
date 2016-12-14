@@ -1,0 +1,80 @@
+------ performance review----------
+Management dan Head of PMO bisa mereview PMO
+File yang bisa diupload adalah image, pdf, word, excel, powerpoint, .iml
+
+Send email notification :
+
+subject -> Mr x Submit Performance Review for Mr Y on + (date.now)
+Body -> Hi, Mr Management.
+	Mr Team Lead has submitted performance review for Mr Technical on + (date.now)
+
+	Click here to take action
+
+	Regards
+	e-PRMS Admin.
+
+subject -> Mr Management Need Revision from Your Performance Review
+Body -> Hi, Mr Team Lead / PMO.
+	Mr Management need revision from your performance review for Mr Technical on + (date.submit)
+
+	Click here to take action
+
+	Regards
+	e-PRMS Admin
+
+Revise Description : Mr Management ask for revision from your performance review for Mr Technical
+
+Approve dan Revise : Tambahkan textbox untuk komentar apabila disuruh untuk merevise 
+
+Edit : Pada saat mengedit masih ditemukan bug
+
+
+--------------------------------commplan-----------------------------------------
+add delete button -> commplan
+
+Email : Error handling pada pengiriman email apabila tidak ada koneksi internet
+
+saat submit commplan
+subject -> Mr technical has submitted Commitment Plan for Periode (input.periode)
+body->Mr technical has submitted Commitment Plan for Periode (input.periode)
+	click here to review
+	regards
+	e-PRMS Admin
+
+not achived,on progress,archive
+tambahin comment 
+
+notifikasi ke technical setelah team lead/management approve
+subject -> your commitment plan has been approved by mr team lead
+body->your commitment plan has been approved by mr team lead
+	regards
+	e-PRMS Admin
+
+notifikasi ke mgmnt setelah team lead approve
+subject -> mr team lead forwarded commitment plan from mr techical for periode (input.periode)
+body-> mr team lead forwarded commitment plan from mr techical for periode (input.periode)
+	click here to review
+	regards
+	e-PRMS Admin
+
+notifikasi for team lead setelah management approve
+subject ->mr management has approved commitment plan from mr techical for periode (input.periode)
+body->mr management has approved commitment plan from mr techical for periode (input.periode)
+	regards
+	e-PRMS Admin
+
+description task for management -> mr team lead forwarded commitment plan from mr techical
+
+
+
+
+
+____________________________________________________________________________________________________________________________________________________________
+subject -> Mr Management Need Revision from Your Performance Review
+Body -> Hi, Mr Team Lead / PMO.
+	Mr Management need revision from your performance review of user on + (date.submit)
+
+	Click here to take action
+
+	Regards
+	e-PRMS Admin

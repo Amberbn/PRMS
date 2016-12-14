@@ -114,7 +114,7 @@ namespace adminlte.Controllers
 
             int usrid = Convert.ToInt32(Session["loginuserid"]);
             var data = db.Mst_Users.Where(ui => ui.UserId == usrid).Single();
-            var task = db.Trx_Comm_Plans.Include(us => us.Mst_User).Where(tt => tt.TaskId == id).FirstOrDefault();
+            var task = db.Trx_Comm_Plans.Include(us => us.Mst_User).Include(rl=>rl.Mst_User.Mst_Role).Where(tt => tt.TaskId == id).FirstOrDefault();
             string periodecek = CekPeriode.CheckPeriode();
             var submit = db.Tbl_Tasks.Where(ts => ts.TaskId == id && ts.ActionDesc == "Submit" && ts.Periode == periodecek).FirstOrDefault();
             DateTime submitDate = submit.SubmitDate.Date;
@@ -185,20 +185,32 @@ namespace adminlte.Controllers
                     string linknya = "http://localhost:53400/Task/TrxCommPlan/" + tsk.TaskId;
                     string deskripsi = "Hi, " + task.Mst_User.FullName + "<br><br>" + tsk.Description + "<br><br>Komentar : " + komentar + "<br>" + "<a href=" + linknya + "><br>Click Here to Review</a><br><p>Regards</p><p>e-PRMS Admin</p>";
                     tsk.IsAction = true;
-                    string subject_atasan = data.FullName + " has approved commitment plan from " + task.Mst_User.FullName + " for Periode " + periode;
-                    string body_atasan = "Hi, " + tsfo.FullName + "<br><br>" + subject_atasan + "<a href=" + linknya + "><br><br>Click Here to Review</a><br><p>Regards</p><p>e-PRMS Admin</p>";
-                    kirim.Send(tsfo.Email, subject_atasan, body_atasan);
+                    string role = task.Mst_User.Mst_Role.RoleName;
+                    if (role!="Head of PMO"&&role!="Head of Delivery")
+                    {
+                        string subject_atasan = data.FullName + " has approved commitment plan from " + task.Mst_User.FullName + " for Periode " + periode;
+                        string body_atasan = "Hi, " + tsfo.FullName + "<br><br>" + subject_atasan + "<a href=" + linknya + "><br><br>Click Here to Review</a><br><p>Regards</p><p>e-PRMS Admin</p>";
+                        kirim.Send(tsfo.Email, subject_atasan, body_atasan);
+                    }
+                    
                     kirim.Send(task.Mst_User.Email, tsk.Description, deskripsi);
 
                 }
                 else
                 {
                     tsk.ActionDesc = "Revise";
-                    tsk.Description = data.FullName + " ask for revision from your commitment plan for " + task.Mst_User.FullName;
+                    tsk.Description = data.FullName + " ask for revision from your commitment plan for " + periodecek;
                     string linknya = "http://localhost:53400/Task/TrxCommPlanEdit/" + tsk.TaskId;
                     string deskripsi = "Hi, " + task.Mst_User.FullName + "<br><br>" + tsk.Description + "<br><br>Komentar : " + komentar + "<br>" + "<a href=" + linknya + "><br>Click Here to Review</a><br><p>Regards</p><p>e-PRMS Admin</p>";
                     tsk.IsAction = false;
-                    kirim.Send(tsfo.Email, tsk.Description, deskripsi);
+                    string role = task.Mst_User.Mst_Role.RoleName;
+
+                    if (role != "Head of PMO" && role != "Head of Delivery")
+                    {
+                        string subject_atasan = data.FullName + " ask for Revision from Commitment Plan of " + task.Mst_User.FullName + " for Periode " + periode;
+                        string body_atasan = "Hi, " + tsfo.FullName + "<br><br>" + subject_atasan + "<a href=" + linknya + "><br><br>Click Here to Review</a><br><p>Regards</p><p>e-PRMS Admin</p>";
+                        kirim.Send(tsfo.Email, subject_atasan, body_atasan);
+                    }
                     kirim.Send(task.Mst_User.Email, tsk.Description, deskripsi);
                 }
 
@@ -239,7 +251,7 @@ namespace adminlte.Controllers
                 {
                     tsk.TaskFor = task.Mst_User.UserId;
                     tsk.ActionDesc = "Revise";
-                    tsk.Description = data.FullName + " ask for revision from your commitment plan for " + task.Mst_User.FullName;
+                    tsk.Description = data.FullName + " ask for revision from your commitment plan for " + periodecek;
                     tsk.IsAction = false;
                     string linknya = "http://localhost:53400/Task/TrxCommPlanEdit/" + tsk.TaskId;
                     string deskripsi = "Hi, " + task.Mst_User.FullName + "<br><br>" + tsk.Description + "<br><br>Komentar : " + komentar + "<br>" + "<a href=" + linknya + "><br>Click Here to Review</a><br><p>Regards</p><p>e-PRMS Admin</p>";

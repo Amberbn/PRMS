@@ -93,7 +93,7 @@ namespace adminlte.Controllers
             }
             tsk.TaskId = tskawal;
             tsk.SubmitDate = DateTime.Now.Date;
-            string linknya = "http://localhost:56913/Task/TrxCommPlan/" + tsk.TaskId;
+            string linknya = "http://localhost:53400/Task/TrxCommPlan/" + tsk.TaskId;
             string deskripsi = "hi, " + tsfo.FullName + "<br>" + tsk.Description + "<a href=" + linknya + "><br>Click Here to Review</a><br><br><p>Regards,</p><p>e-PRMS Admin</p>";
             //return Json(tsk, JsonRequestBehavior.AllowGet);
             SendEmail email = new SendEmail();
