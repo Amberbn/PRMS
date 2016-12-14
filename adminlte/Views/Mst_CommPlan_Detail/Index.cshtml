@@ -1,0 +1,49 @@
+﻿@model IEnumerable<adminlte.Models.Mst_CommPlan_Detail>
+
+<h3 class="col-md-10">Master Commitment Detail</h3>
+
+<p class="col-md-10">
+    <input type="button" class="btn btn-primary" value="Add New" onclick="location.href='@Url.Action("Create", "Mst_CommPlan_Detail")'" />
+</p>
+<div id="tbl" class="col-md-10">
+    <table class="table table-striped table-bordered">
+        <thead class="bg-light-blue-gradient">
+            <tr>
+                <th>
+                    @Html.LabelFor(model => model.FirstOrDefault().Mst_CommPlan, "Commitment Plan")
+                    
+                </th>
+                <th>
+                    @Html.LabelFor(model => model.FirstOrDefault().Mst_Role.RoleName, "Role")
+                    
+                </th>
+                <th>
+                    @Html.LabelFor(model => model.FirstOrDefault().Detail_Description, "Commitment Plan Detail")
+                    
+                </th>
+                <th><label>Actions</label></th>
+            </tr>
+            </thead>
+
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Mst_CommPlan.CommPlanDesc)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Mst_Role.RoleName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Detail_Description)
+                    </td>
+                    <td>
+                        @Html.ActionLink("Edit", "Edit", new { id = item.CommPlanDetailId }) |
+                        @Html.ActionLink("Details", "Details", new { id = item.CommPlanDetailId }) |
+                        @Html.ActionLink("Delete", "Delete", new { id = item.CommPlanDetailId })
+                    </td>
+                </tr>
+            }
+
+    </table>
+    </div>

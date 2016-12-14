@@ -1,0 +1,47 @@
+﻿@model adminlte.Models.Mst_LoginView
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html class="bg-black">
+<head>
+    <meta charset="UTF-8">
+    <title>Log in</title>
+    <meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' name='viewport'>
+
+    <link href="~/Content/bootstrap.css" rel="stylesheet" />
+    <link href="~/Content/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/Content/AdminLTE.css" rel="stylesheet" />
+    <link href="~/Content/font-awesome.css" rel="stylesheet" />
+</head>
+<body class="bg-black">
+  
+        <div class="form-box" id="login-box">
+            <div class="header">Sign In</div>
+            <form method="post">
+                @using (Html.BeginForm("Login", "PRMS", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+            {
+                    @Html.AntiForgeryToken()
+                    <div class="body bg-gray">
+                        <div class="form-group">
+                            @Html.TextBoxFor(m => m.UserName, new { @class = "form-control" })
+                        </div>
+                        <div class="form-group">
+                            @Html.PasswordFor(m => m.Password, new { @class = "form-control" })
+                        </div>
+                        <div class="form-group col-md-offset-0">
+                             <input type="checkbox" name="remember_me" /> Remember me
+                        </div>
+                    </div>
+
+                    <div class="footer">
+                        <button type="submit" class="btn bg-olive btn-block">Sign In</button>
+                    </div>
+                }
+            </form>
+
+</div>
+        <script src="~/Scripts/bootstrap.min.js"></script>
+        <script src="~/Scripts/jquery-3.1.1.min.js"></script>
+</body>
+</html>

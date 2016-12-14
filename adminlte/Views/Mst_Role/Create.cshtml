@@ -1,0 +1,42 @@
+﻿@model adminlte.Models.Mst_Role
+
+@{
+    ViewBag.Title = "Create";
+
+}
+
+@using (Html.BeginForm()) 
+{
+    @Html.AntiForgeryToken()
+    
+    <div class="form-horizontal">
+        <h3>Create Role</h3>
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <div class="form-group">
+            @Html.LabelFor(model => model.RoleName, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-3">
+                @Html.EditorFor(model => model.RoleName, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.RoleName, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.IsActive, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-3">
+                @Html.EditorFor(model => model.IsActive)
+                @Html.ValidationMessageFor(model => model.IsActive, "", new { @class = "text-danger" })
+            </div>
+        </div>
+               
+    </div>
+    <div class="control-group">
+        <div class="col-md-offset-2">
+            <button type="submit" value="Create" class="btn btn-primary">Create</button>
+            <button type="submit" value="Back" class="btn btn-primary" onclick="location.href='@Url.Action("Index", "Mst_Role")'">Back</button>            
+        </div>
+    </div>
+
+}
+
+

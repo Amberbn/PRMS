@@ -1,0 +1,111 @@
+﻿@model IEnumerable<adminlte.Models.Mst_User>
+
+@{
+    ViewBag.Title = "Master Table User";
+}
+
+<h3 class="col-md-10">Master User</h3>
+
+<br />
+
+<p class="col-md-10">
+    <input type="button" value="Add New" class="btn btn-primary" onclick="location.href='@Url.Action("Create", "Mst_User")'" /> 
+</p>
+<br />
+<div id="tbl" class="col-md-11">
+    <table class="table table-striped" style="font-size:100%">
+        <thead class="bg-light-blue-gradient">
+            <tr>
+                <th>                
+                    @Html.LabelFor(model => model.FirstOrDefault().Mst_Role.RoleName, "Role")                 
+                </th> 
+                <th>
+                    
+                    @Html.LabelFor(model=> model.FirstOrDefault().Mst_RoleMap.RoleMapName,"Role Map")
+                </th>
+                <th>
+                    @Html.LabelFor(model => model.FirstOrDefault().UserName, "User Name")
+                 
+                </th>
+                <th>
+                    @Html.LabelFor(model => model.FirstOrDefault().FullName, "Full Name")
+                    
+                </th>
+                <th>
+                    @Html.LabelFor(model => model.FirstOrDefault().Email, "Email")
+                  
+                </th>
+                <th>
+                    @Html.LabelFor(model => model.FirstOrDefault().StatusKaryawan, "Employe Status")
+                   
+                </th>
+                <th>
+                    @Html.LabelFor(model => model.FirstOrDefault().StartEmploye, "Start Employe")
+                  
+                </th>
+                <th>
+                    @Html.LabelFor(model => model.FirstOrDefault().IsActive, "Is Active")
+                   
+                </th>
+                <th>
+                    @Html.LabelFor(model => model.FirstOrDefault().DirectReportId, "Report To")
+                </th>
+                <th>
+                    <label>Actions</label>
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+    @foreach (var item in Model)
+    {
+    <tr class="active">
+        <td>
+            @Html.DisplayFor(modelItem => item.Mst_Role.RoleName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Mst_RoleMap.RoleMapName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.UserName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.FullName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Email)
+        </td>
+        <td>
+
+            @Html.DisplayFor(modelItem => item.StatusKaryawan)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.StartEmploye)
+        </td>
+        <td>
+            @if (item.IsActive == true)
+            {
+                <span class="label label-success">Active</span>
+            }
+            else
+            {
+                <span class="label label-danger">Deactive</span>
+            }
+        </td>
+
+        <td>
+            @foreach(var val in Model.Where(asx=>asx.UserId==item.DirectReportId))
+            {
+                @Html.DisplayFor(modelItem=>val.FullName)
+            }
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id = item.UserId }) |
+            @Html.ActionLink("Details", "Details", new { id = item.UserId }) |
+            @Html.ActionLink("Delete", "Delete", new { id = item.UserId })
+        </td>
+    </tr>
+    }
+    </table>
+</div>
+

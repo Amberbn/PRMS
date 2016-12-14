@@ -1,0 +1,126 @@
+﻿@model adminlte.Models.Mst_User
+
+@{
+    ViewBag.Title = "Create";
+}
+
+<h3>Create User</h3>
+
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    
+    <div class="form-horizontal">
+        
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.UserName, "User Name", htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-3">
+                @Html.EditorFor(model => model.UserName, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.UserName, "", new { @class = "text-danger" })
+            </div>
+            @Html.LabelFor(model => model.StartEmploye, "Start Employe", htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-3">
+                @Html.EditorFor(model => model.StartEmploye, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.StartEmploye, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Password, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-3">
+                @Html.EditorFor(model => model.Password, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Password, "", new { @class = "text-danger" })
+            </div>
+            @Html.LabelFor(model => model.DirectReportId, "Report To", htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-3">
+                @Html.DropDownList("DirectReportId", null, "Tidak Ada", htmlAttributes: new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.DirectReportId, "", new { @class = "text-danger" })
+            </div>
+
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.FullName, "Full Name", htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-3">
+                @Html.EditorFor(model => model.FullName, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.FullName, "", new { @class = "text-danger" })
+            </div>
+            @Html.LabelFor(model => model.RoleId, "Role", htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-3">
+                @Html.DropDownList("RoleId", null, htmlAttributes: new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.RoleId, "", new { @class = "text-danger" })
+            </div>
+
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Email,"Email", htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-3">
+                @Html.EditorFor(model => model.Email, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })
+            </div>
+            @Html.LabelFor(model => model.RoleMapId, "Role Map", htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-3">
+                @Html.DropDownList("RoleMapId", null, "", htmlAttributes: new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.RoleMapId, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.StatusKaryawan,"Status", htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-3">
+                @Html.DropDownList("StatusKaryawan", new List<SelectListItem>
+                    {
+                        new SelectListItem { Text = "Permanent", Value = "Permanent" },
+                        new SelectListItem { Text = "Intern", Value = "Intern"},
+                        new SelectListItem { Text = "Contract", Value = "Contract"}
+                    },
+                htmlAttributes: new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.StatusKaryawan, "", new { @class = "text-danger" })
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(model => model.IsActive, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-3">
+                    @Html.EditorFor(model => model.IsActive)
+                    @Html.ValidationMessageFor(model => model.IsActive, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(model => model.CommPlanOpen, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-3">
+                    @Html.EditorFor(model => model.CommPlanOpen)
+                    @Html.ValidationMessageFor(model => model.CommPlanOpen, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(model => model.PerfReviewOpen, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-3">
+                    @Html.EditorFor(model => model.PerfReviewOpen)
+                    @Html.ValidationMessageFor(model => model.PerfReviewOpen, "", new { @class = "text-danger" })
+                </div>
+            </div>
+       </div>
+  
+      
+        <br />
+        
+        <div class="form-group">
+            <div class="control-label col-md-2">
+            </div>
+            <div class="col-md-3">
+                <button type="submit" class="btn btn-primary">Create</button>
+                <button type="button" class="btn btn-primary" onclick="location.href='@Url.Action("Index", "Mst_User")'">Cancel</button>
+            </div>
+        </div>
+    </div>
+}
+
+
+
+<script type="text/javascript">
+    
+</script>

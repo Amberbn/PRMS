@@ -1,0 +1,54 @@
+﻿@model IEnumerable<adminlte.Models.Mst_RoleMap>
+
+@{
+    ViewBag.Title = "Master Table RoleMap";
+
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h3 class="col-md-10">Master Role Map</h3><br />
+<p class="col-md-10">
+    <input type="button" value="Add New" class="btn btn-primary" onclick="location.href='@Url.Action("Create", "Mst_RoleMap")'" />
+</p>
+<div id="tbl" class="col-md-10">
+    <table class="table table-striped table-bordered">
+        <thead class="bg-light-blue-gradient">
+            <tr>
+                <th>
+                    @Html.LabelFor(model => model.FirstOrDefault().RoleMapName, "Role Map")
+                   
+                </th>
+                <th>
+                    @Html.LabelFor(model => model.FirstOrDefault().IsActive, "Is active")
+                 
+                </th>
+                <th><label>Actions</label></th>
+            </tr>
+        </thead>
+
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.RoleMapName)
+                    </td>
+                    <td>
+                       @if (item.IsActive == true)
+                       {
+                        <span class="label label-success">Active</span>
+                       }
+                       else
+                       {
+                        <span class="label label-danger">Deactive</span>
+                       }
+                    </td>
+                    <td>
+                        @Html.ActionLink("Edit", "Edit", new { id = item.RoleMapId }) |
+                        @Html.ActionLink("Details", "Details", new { id = item.RoleMapId }) |
+                        @Html.ActionLink("Delete", "Delete", new { id = item.RoleMapId })
+                    </td>
+                </tr>
+            }
+
+</table>
+</div>

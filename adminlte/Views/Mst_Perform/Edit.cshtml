@@ -1,0 +1,47 @@
+﻿@model adminlte.Models.Mst_Perform
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    
+    <div class="form-horizontal">
+        <h3>Edit Performance</h3>
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        @Html.HiddenFor(model => model.PerformId)
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.PerformDesc,"Performance", htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-3">
+                @Html.EditorFor(model => model.PerformDesc, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.PerformDesc, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.RoleMapId, "Role Map", htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-3">
+                @Html.DropDownList("RoleMapId", null, htmlAttributes: new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.RoleMapId, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.IsActive, "Is active", htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-3">
+                @Html.EditorFor(model => model.IsActive)
+                @Html.ValidationMessageFor(model => model.IsActive, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="control-group">
+            
+            <div class="col-md-offset-2">
+                <button type="submit" value="Save" class="btn btn-primary">Save</button>
+                <button type="button" value="Back" class="btn btn-primary" onclick="location.href='@Url.Action("Index", "Mst_Perform")'">Back</button>               
+            </div>
+        </div>
+    </div>
+}
+
+

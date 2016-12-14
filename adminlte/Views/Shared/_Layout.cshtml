@@ -1,0 +1,168 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title</title>
+    <link href="~/Content/adminlte.css" rel="stylesheet" />
+    <link href="~/Content/bootstrap.css" rel="stylesheet" />
+    <link href="~/Content/css/font-awesome.css" rel="stylesheet" />
+    <link href="~/Content/ionicons.css" rel="stylesheet" />
+    <link href="~/Content/css/iCheck/all.css" rel="stylesheet" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap3-dialog/1.34.5/css/bootstrap-dialog.min.css" rel="stylesheet" type="text/css" />
+    <style>
+        .error {
+            color: red;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body class="skin-blue">
+    <!-- header logo: style can be found in header.less -->
+    <header class="header">
+
+        <a href="~/Task/Index" class="logo">
+            <!-- Add the class icon to your logo image or logo icon to add the margining -->
+            <img src="~/Content/logoebiz.png" width="70" height="40" style="float:left">
+            <span> ePRM System </span>
+        </a>
+
+        <!-- Header Navbar: style can be found in header.less -->
+        <nav class="navbar navbar-static-top" role="navigation">
+
+            <!-- Sidebar toggle button-->
+            <a href="#" id="plus" class="navbar-btn sidebar-toggle" data-toggle="offcanvas" role="button">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </a>
+            <span class="navbar-brand">PERFORMANCE REVIEW MANAGEMENT SYSTEM</span>
+            <div class="navbar-right">
+                <ul class="nav navbar-nav">
+                    <li>
+                        <a href="@Url.Action("Login", "PRMS")">
+                            <i class="glyphicon glyphicon-user"></i>
+                            <span> Sign Out<i></i></span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+
+    </header>
+    @{bool performaceopen = Convert.ToBoolean(Session["performance"]);
+        bool commplan = Convert.ToBoolean(Session["commplan"]); }
+    <div class="wrapper row-offcanvas row-offcanvas-left">
+        <!-- Left side column. contains the logo and sidebar -->
+        <aside class="left-side sidebar-offcanvas">
+            <!-- sidebar: style can be found in sidebar.less -->
+            <section class="sidebar">
+                <!-- Sidebar user panel -->
+                <div class="user-panel">
+                    <div class="pull-left info">
+
+                        @if (Session["loginusername"] != null)
+                        {
+                            <p>Welcome, @Session["loginusername"].ToString()</p>
+                        }
+                    </div>
+                </div>
+                <!-- sidebar menu: : style can be found in sidebar.less -->
+                <ul class="sidebar-menu">
+                    @{ string level = Session["level"].ToString();}
+                    @if (level == "Admin")
+                    {
+                        <li>
+                            <a href="#">
+                                <i class="fa fa-address-book"></i> <span>Dashboard</span>
+                            </a>
+                        </li>
+                        <li class="treeview">
+                            <a href="#">
+                                <i class="fa fa-table"></i>
+                                <span>Master</span>
+                                <i class="fa fa-angle-left pull-right"></i>
+                            </a>
+                            <ul class="treeview-menu">
+                                <li><a href="@Url.Action("Index", "Mst_User")"><i class="fa fa-angle-double-right"></i> User</a></li>
+                                <li><a href="@Url.Action("Index", "Mst_Role")"><i class="fa fa-angle-double-right"></i> Role</a></li>
+                                <li><a href="@Url.Action("Index", "Mst_RoleMap")"><i class="fa fa-angle-double-right"></i> Role Map</a></li>
+                                <li><a href="@Url.Action("Index", "Mst_Perform")"><i class="fa fa-angle-double-right"></i> Performance</a></li>
+                                <li><a href="@Url.Action("Index", "Mst_Perform_Detail")"><i class="fa fa-angle-double-right"></i> Performance Detail</a></li>
+                                <li><a href="@Url.Action("Index", "Mst_CommPlan")"><i class="fa fa-angle-double-right"></i> Commitment Plan</a></li>
+                                <li><a href="@Url.Action("Index", "Mst_CommPlan_Detail")"><i class="fa fa-angle-double-right"></i> Commitment Plan Detail</a></li>
+                            </ul>
+                        </li>
+                        @*<li>
+                            <a href="@Url.Action("Index", "Mst_Performance_Review")">
+                                <i class="fa fa-laptop"></i> <span>Open Ticket</span>
+                            </a>
+                        </li>*@
+                    }
+                    @if (level == "PMO" || level == "Team Leader" || level == "Management" || level == "Head of PMO" || level == "Head of Delivery")
+                    {
+                        <li>
+                            <a href="@Url.Action("Index", "Mst_Performance_Review")">
+                                <i class="fa fa-laptop"></i> <span>Performance Review</span>
+                            </a>
+                        </li>
+                        
+                    }
+                    @if (level != "Admin" && level != "Management")
+                    {
+                        <li>
+                            <a href="@Url.Action("commplan", "Mst_CommPlan")">
+                                <i class="fa fa-calendar"></i> <span>Commitment Plan</span>
+                            </a>
+                        </li>
+
+
+                    }
+                    @if (performaceopen == false || commplan == false)
+                    {
+                        <li>
+
+                            <a href="@Url.Action("Create","Request")">
+                                <i class="fa fa-edit"></i> <span>Request Ticket</span>
+                            </a>
+
+
+                        </li>
+                    }
+  <li>
+                        <a href="@Url.Action("Index","Task")">
+                            <i class="fa fa-edit"></i> <span>Task</span>
+                        </a>
+                    </li>
+
+
+                </ul>
+            </section>
+            <!-- /.sidebar -->
+        </aside>
+
+        <!-- Right side column. Contains the navbar and content of the page -->
+        <aside class="right-side">
+            <!-- Content Header (Page header) -->
+            <section class="content-header">
+                <h1 class="center-block"></h1>
+            </section>
+            <script src="~/Scripts/jquery.min.js"></script>
+            <script src="~/Scripts/jquery.validate.js"></script>
+            <script src="~/Scripts/additional-methods.min.js"></script>
+            <script src="~/Scripts/bootstrap.js"></script>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap3-dialog/1.34.5/js/bootstrap-dialog.min.js"></script>
+            <script src="~/Scripts/jquery-ui-1.10.3.js"></script>
+            <script src="~/Scripts/bootstrap3-wysihtml5.js"></script>
+            <script src="~/Scripts/app.js"></script>
+            <script src="~/Scripts/dashboard.js"></script>
+            <script src="~/Scripts/demo.js"></script>
+            <div class="container body-content">
+                @RenderBody()
+            </div>
+        </aside>
+    </div>
+
+</body>
+</html>

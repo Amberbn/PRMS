@@ -1,0 +1,37 @@
+﻿@model adminlte.Models.Mst_CommPlan
+
+<h3>Are you sure you want to delete this?</h3>
+<div>
+   
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+           @Html.LabelFor(model => model.CommPlanDesc, "Commitment Plan")
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.CommPlanDesc)
+        </dd>
+
+        <dt>
+           @Html.LabelFor(model => model.isActive,"Is Active")
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.isActive)
+        </dd>
+
+    </dl>
+
+    @using (Html.BeginForm()) {
+        @Html.AntiForgeryToken()
+        <h6 style="color:red">@ViewBag.message</h6>
+        <dl class="dl-horizontal">
+            <dt></dt>
+            <dd class="form-group">
+                <button type="submit" value="Delete" class="btn btn-primary">Delete</button>
+                <button type="button" value="Back" class="btn btn-primary" onclick="location.href='@Url.Action("Index", "Mst_CommPlan")'">Cancel</button>
+            </dd>
+        </dl>
+    }
+</div>

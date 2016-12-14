@@ -1,0 +1,44 @@
+﻿@model adminlte.Models.Mst_CommPlan_Detail
+
+@using (Html.BeginForm()) 
+{
+    @Html.AntiForgeryToken()
+    <h3>Create Commitment Plan Detail</h3>
+
+    <div class="form-horizontal">
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <div class="form-group">
+            @Html.LabelFor(model => model.CommPlanid, "Commitment Plan", htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-3">
+                @Html.DropDownList("CommPlanid", null, htmlAttributes: new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.CommPlanid, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Detail_Description,"Commitment Plan Desc", htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-3">
+                @Html.EditorFor(model => model.Detail_Description, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Detail_Description, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.RoleId, "Role", htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-3">
+                @Html.DropDownList("RoleId", null, htmlAttributes: new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.RoleId, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <br />
+        <div class="form-group">
+            <div class="control-label col-md-2">
+            </div>
+            <div class="col-md-3">
+                <button type="submit" class="btn btn-primary">Create</button>
+                <button type="button" class="btn btn-primary" onclick="location.href='@Url.Action("Index", "Mst_CommPlan_Detail")'">Cancel</button>
+            </div>
+        </div>
+    </div>
+}

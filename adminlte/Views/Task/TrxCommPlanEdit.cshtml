@@ -1,0 +1,233 @@
+﻿@model IEnumerable<adminlte.Models.Trx_Comm_Plan>
+<style>
+    .dis:hover {
+        cursor: default !important;
+    }
+</style>
+<form method="post" id="commitmentplan" enctype="multipart/form-data" class="col-md-11">
+
+    <div>
+        <div class="col-md-11"><h3>Commitment Plan</h3></div>
+        <br />
+        <hr />
+        <dl class="dl-horizontal col-md-5">
+            <dt class="form-group">
+                <label>Role</label>
+            </dt>
+            <dd>
+                <input type="text" class="col-md-11" value="@ViewBag.role" disabled>
+            </dd>
+            <dt class="form-group">
+                <label>Periode</label>
+            </dt>
+            <dd>
+                <input type="text" class="col-md-11" value="@ViewBag.periode" disabled>
+                <input type="hidden" name="periode" value="@ViewBag.periode">
+            </dd>
+            <dt class="form-group">
+                <label>Report To</label>
+            </dt>
+            <dd>
+                <input type="text" value="@ViewBag.report" class="col-md-11" disabled>
+            </dd>
+        </dl>
+    </div>
+    <table class="table table-striped table-bordered" style="white-space:nowrap">
+        <thead class="bg-light-blue-gradient">
+            <tr>
+                <th class="col-md-2">
+                    Batch
+                </th>
+                <th class="col-md-3">
+                    Detail
+                </th>
+                <th class="col-md-2">
+                    Result
+                </th>
+                <th class="col-md-3">
+                    Upload File
+                </th>
+                <th class="col-md-1">
+                    Action
+                </th>
+                @if (ViewBag.cek != 0 || ViewBag.ceksave != 0)
+                {
+                    <th class="col-md-1">
+                        Delete
+                    </th>
+                }
+            </tr>
+        </thead>
+        @{  var i = 0;
+            var idParent = 0;
+            List<SelectListItem> result = new List<SelectListItem>();
+            result.Add(new SelectListItem { Text = "On Progress", Value = "On Progress" });
+            result.Add(new SelectListItem { Text = "Achieve", Value = "Achieve" });
+            result.Add(new SelectListItem { Text = "Not Achived", Value = "Not Achived" });
+        }
+        @foreach (var category in Model.Select(x => x.Mst_CommPlan).Distinct())
+            {
+                idParent++;
+            <tr>
+                <td colspan="5">
+                    @category.CommPlanDesc
+                </td>
+                @if (ViewBag.cek != 0 || ViewBag.ceksave != 0)
+                {
+                    <td colspan="4">
+                        <a class="btn btn-xs btn-primary" id="btnRow_@idParent" onclick="javascript:addRow(this.id);">Add Row</a>
+                    </td>
+                }
+            </tr>
+
+            var a = 0;
+            <tbody id="kategor_@idParent">
+                @foreach (var subcategory in Model.Where(x => category.CommPlanid == x.CommPlanid))
+                {
+                    string detail = "detail_" + i;
+                    string resultan = "resultan_" + i;
+                    string complaind = "complainid_" + i;
+                    string file = "file_" + i;
+                    string files = "files_" + i;
+                    string trxid = "TrxId_" + i;
+                    i++;
+                    a++;
+                    string cat = "kategori_" + a;
+                    <div id="kloning">
+                        <tr id="@cat">
+                            <td>
+                                <input type="hidden" id="@trxid" name="@trxid" value="@subcategory.TrxId" />
+                            </td>
+                            <td width="20%"><input name="@complaind" type="hidden" value="@category.CommPlanid" /></td>
+
+                            <td>
+                                <textarea class="dis" name=@detail id="detail" style="margin: 0px 0px 10px; width: 450px; height: 40px; "> @subcategory.DescriptionPlan</textarea>
+                            </td>
+                            <td>
+                                @Html.DropDownList(@resultan, new SelectList(result, "Value", "Text", subcategory.IsAchievable), new { @class = "form-group form-control"})
+                            </td>
+                            <td class="edit">
+                                @if (subcategory.File != "")
+                                {
+                                    <div id="walang">
+                                        <input type="hidden" name=@files value="@subcategory.File" />
+                                        @Html.ActionLink("Download", "Download", "Task", new { jeneng = subcategory.File }, new { id = "jangkrik" })
+                                        @if (ViewBag.cek != 0 || ViewBag.ceksave != 0)
+                                        {
+                                            <a onclick="DeleteFile(this)">Delete</a>
+                                        }
+                                    </div>
+                                    <div class="coro">
+                                    </div>
+                                }
+                                else
+                                {
+                                    if (ViewBag.cek != 0 || ViewBag.ceksave != 0)
+                                    {
+                                        <input type="file" id="file" name="@file" />
+                                    }
+                                }
+                            </td>
+                            @if (ViewBag.cek != 0 || ViewBag.ceksave != 0)
+                            {
+                                <td>
+                                    <a class="btn btn-xs btn-primary delete">Delete</a>
+                                </td>
+                            }
+                        </tr>
+                    </div>
+                }
+            </tbody>
+        }
+    </table>
+    <div class="col-md-11"><span style="font-weight:bold">Komentar :</span><label id="komentar">@ViewBag.komentar</label></div>
+    @if (ViewBag.cek != 0 || ViewBag.ceksave != 0)
+    {
+        <button id="submit" class="btn btn-primary" name="submit" type="submit">Submit</button>
+    }
+
+</form>
+<script type="text/javascript">
+    $("#commitmentplan").validate({ errorElement: 'div' });
+    $.validator.addMethod('filesize', function (value, element, param) {
+        // param = size (en bytes) 
+        // element = element to validate (<input>)
+        // value = value of the element (file name)
+        return this.optional(element) || (element.files[0].size <= param)
+    });
+    $(".delete").click(function (e) {
+        e.preventDefault();
+        $(this).closest("tr").remove();
+        AutoNumber()
+    });
+
+    function DeleteFile(deletehtml) {
+        var trxid = $(deletehtml).closest("tr").find("td input[name^=TrxId]").val();
+        console.log("TrxId = " + trxid);
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("DownloadDelete","Task")',
+            data: 'trxid=' + trxid,
+            success: function (data) {
+                console.log("Ajax success");
+                var td = $(deletehtml).closest("td");
+                $(deletehtml).closest("div").remove();
+                td.find(".coro").append('<input type="file" id="file" name="file_" />');
+                AutoNumber();
+            }
+        });
+    }
+
+    function AutoNumber() {
+        $("tr[id^='kategor']").each(function (ia) {
+            $(this).find("textarea[name^='detail_']").attr("name", "detail_" + ia);
+            $(this).find("select[name*='resultan_']").attr("name", "resultan_" + ia);
+            $(this).find("input[name*='complainid_']").attr("name", "complainid_" + ia);
+            $(this).find("input[name*='file_']").attr("name", "file_" + ia);
+            $(this).find("input[name*='files_']").attr("name", "files_" + ia);
+
+            $("textarea[name^='detail_']").each(function () {
+                $(this).rules("add", {
+                    required: true,
+                    messages: {
+                        required: "Harap Masukan Text"
+                    }
+                });
+            });
+
+            $("input[name^='file_']").each(function () {
+                $(this).rules("add", {
+                    extension: "doc|docx|pdf|xls|xlsx|ppt|pptx|iml|jpg|jpe|jpeg|png|bmp|gif|tif|tiff|pic|pict|csv|rar|zip|txt",
+                    filesize: 5242880,
+                    messages: {
+                        extension: "Invalid file extension",
+                        filesize: "Please select file smaller than 5 MB"
+                    }
+                });
+            });
+
+        });
+    }
+    function addRow(e) {
+        var id = e.substring(6);
+        var idbody = "kategor" + id;
+        $("#kategor" + id).children("tr").last().clone().appendTo("#kategor" + id);
+        $("#kategor" + id).children("tr").last().find(".edit").last().replaceWith('<input type="file" id="file" name="file_" />');
+        var detail = $("#kategor" + id).find("textarea").last();
+        detail.val("");
+        $(".delete").click(function (e) {
+            e.preventDefault();
+            $(this).closest("tr").remove();
+            AutoNumber()
+        });
+        AutoNumber()
+    }
+
+    AutoNumber()
+    $("#save").click(function () {
+        $("#check").val(1);
+    });
+    $("#kirim").click(function () {
+        $("#check").val(2);
+    });
+</script>

@@ -1,0 +1,36 @@
+﻿@model adminlte.Models.Mst_RoleMap
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h3>Detail Role Map</h3>
+
+<div>
+  
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+           @Html.LabelFor(model => model.RoleMapName,"Role Map")
+        </dt>
+
+        <dd>
+          @Html.DisplayFor(model => model.RoleMapName)
+        </dd>
+
+        <dt>
+           @Html.LabelFor(model => model.IsActive, "Is Active")
+        </dt>
+
+        <dd>
+           @Html.DisplayFor(model => model.IsActive)
+        </dd>
+        <dt></dt>
+        <dd class="form-group">
+            <br />
+            <button type="button" value="Edit" class="btn btn-primary" onclick="location.href='@Url.Action("Edit", new { id = Model.RoleMapId })'">Edit</button>
+            <button type="button" value="Back" class="btn btn-primary" onclick="location.href='@Url.Action("Index", "Mst_RoleMap")'">Cancel</button>
+        </dd>
+    </dl>
+
+</div>

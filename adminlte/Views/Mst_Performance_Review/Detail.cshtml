@@ -1,0 +1,222 @@
+﻿@model IEnumerable<adminlte.Models.Trx_Perform_Review>
+
+@{
+    ViewBag.Title = "Detail Review";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<div class="col-md-5">
+    <h3>Performance Review Detail</h3>
+    <br />
+    <dl class="dl-horizontal">
+
+        <dt>
+            Review For
+        </dt>
+
+        <dd>
+            <input class="form-group form-control" value="@ViewBag.nameReviewFor" disabled />
+        </dd>
+
+        <dt>
+            Review By
+        </dt>
+
+        <dd>
+            <input class="form-group form-control" value="@ViewBag.nameReviewBy" disabled />
+
+        </dd>
+
+        <dt>
+            Periode
+        </dt>
+
+        <dd>
+            <input class="form-group form-control" value="@Model.FirstOrDefault().Periode" disabled />
+
+        </dd>
+    </dl>
+</div>
+<br>
+
+<div class="col-md-11">
+    <table class="table">
+        <thead class="bg-light-blue-gradient">
+            <tr>
+                <th>
+                    Batch
+                </th>
+                <th>
+                    Description
+                </th>
+                <th hidden="hidden">
+                    @Html.DisplayNameFor(model => model.TaskId)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Score)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Notes)
+                </th>
+                <th>
+                    File Name
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Mst_Perform_Detail.Weight)
+                </th>
+                <th>
+                    Total
+                </th>
+            </tr>
+        </thead>
+        @{int check = -1;}
+        @foreach (var item in Model)
+        {
+
+            if (check != item.Mst_Perform_Detail.PerformId)
+            {
+                check = item.Mst_Perform_Detail.PerformId;
+                <tr>
+                    <td colspan="7">
+                        <span style="font-weight:bold">
+                            @Html.DisplayFor(modelItem => item.Mst_Perform_Detail.Mst_Perform.PerformDesc)
+                        </span>
+                    </td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Mst_Perform_Detail.Detail_Description)
+                    </td>
+                    <td hidden="hidden">
+                        @Html.DisplayFor(modelItem => item.TaskId)
+                    </td>
+                    <td class="Score">
+                        @Html.DisplayFor(modelItem => item.Score)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Notes)
+                    </td>
+                    @if (item.FileName != "")
+                    {
+                        <td>
+                            @Html.ActionLink("Download", "Download", "Mst_Performance_Review", new { FileName = item.FileName, TaskId = item.TaskId }, null)
+                        </td>
+                    }
+                    else
+                    {
+                        <td>
+                            -
+                        </td>
+                    }
+                    <td class="Weight">
+                        @Html.DisplayFor(modelItem => item.Mst_Perform_Detail.Weight)
+                    </td>
+                    <td class="TotalRow">
+                        0
+                    </td>
+                </tr>
+            }
+            else
+            {
+                <tr>
+                    <td></td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Mst_Perform_Detail.Detail_Description)
+                    </td>
+                    <td hidden="hidden">
+                        @Html.DisplayFor(modelItem => item.TaskId)
+                    </td>
+                    <td class="Score">
+                        @Html.DisplayFor(modelItem => item.Score)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Notes)
+                    </td>
+                    @if (item.FileName != "")
+                    {
+                        <td>
+                            @Html.ActionLink("Download", "Download", "Mst_Performance_Review", new { FileName = item.FileName, TaskId = item.TaskId.ToString() }, null)
+                        </td>
+                    }
+                    else
+                    {
+                        <td>
+                            -
+                        </td>
+                    }
+                    <td class="Weight">
+                        @Html.DisplayFor(modelItem => item.Mst_Perform_Detail.Weight)
+                    </td>
+                    <td class="TotalRow">
+                        0
+                    </td>
+                </tr>
+            }
+        }
+        <tr>
+            <td colspan="5">
+                <label style="font-weight:bold">Total</label>
+            </td>
+            <td>
+                <label id="TotalWeight" style="font-weight:bold"></label>
+            </td>
+            <td>
+                <label id="TotalAll" style="font-weight:bold"></label>
+            </td>
+        </tr>
+    </table>
+</div>
+<form id="FormDetail" method="post" class="form-group">
+    @if (!ViewBag.CekApprove)
+    {
+        <div class="form-group col-md-5">
+            <label for="komentar" style="font-weight:bold">Comment:</label>
+            <textarea class="form-control" rows="5" id="komentar" name="komentar"></textarea>
+        </div>
+        string level = Session["level"].ToString();
+        if (level == "Management")
+        {
+            <div class="form-group col-md-11" style="display:inline">
+                <input type="hidden" name="id" value="@Model.FirstOrDefault().TaskId" />
+                <button name="submit" value="Approve" type="submit" class="btn btn-primary">Approve</button>
+                <button name="submit" value="Revise" type="submit" class="btn btn-primary">Revise</button>
+            </div>
+        }
+    }
+</form>
+<script>
+    $("#FormDetail").validate({
+        rules: {
+            komentar: "required"
+        },
+        messages: {
+            komentar: "Please enter a comment"
+        }
+    });
+    $(".TotalRow").each(function () {
+        var score = $(this).closest("tr").children(".Score").text();
+        console.log("score = " + score);
+        var weight = $(this).closest("tr").children(".Weight").text();
+        console.log("weight = " + weight);
+        $(this).text(score * weight);
+    });
+    $("#TotalAll").each(function () {
+        var total = 0;
+        $(".TotalRow").each(function () {
+            total += parseInt($(this).text());
+            console.log("total = " + total);
+        });
+        $(this).text(total);
+    });
+    $("#TotalWeight").each(function () {
+        var total = 0;
+        $(".Weight").each(function () {
+            total += parseInt($(this).text());
+            console.log("total = " + total);
+        });
+        $(this).text(total);
+    });
+
+</script>

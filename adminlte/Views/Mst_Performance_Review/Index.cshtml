@@ -1,0 +1,411 @@
+﻿@model adminlte.Models.Mst_User
+
+@{
+    ViewBag.Title = "Mst_Performance_Review";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@*<h2>Home</h2>*@
+
+<form id="FormReview" method="post" enctype="multipart/form-data">
+    <div class="form-group ">
+        <h3>Performance Review</h3>
+        <hr />
+        <div class="col-md-12" id="UserInfo">
+            <dl class="dl-horizontal col-md-5">
+                <dt>
+                    <label>Review For</label>
+                </dt>
+                <dd class="form-group">
+                    @Html.DropDownList("UserId", null, "Select Name", htmlAttributes: new { @class = "form-control", @onchange = "getUserInfo(this.value)" })
+                    @Html.ValidationMessageFor(model => model.UserId, "", new { @class = "text-danger" })
+                </dd>
+                <dt>
+                    <label>Full Name</label>
+                </dt>
+
+                <dd>
+                    <input class="form-group form-control" id="FullName" disabled />
+                </dd>
+                <dd>
+
+                </dd>
+                <dt>
+                    <label>Role</label>
+                </dt>
+
+                <dd>
+                    <input class="form-group form-control" id="RoleName" disabled />
+                </dd>
+
+                <dt>
+                    <label>Email Address</label>
+                </dt>
+
+                <dd>
+                    <input class="form-group form-control" id="Email" disabled />
+                </dd>
+
+                <dt>
+                    <label>Employee Status</label>
+                </dt>
+
+                <dd>
+                    <input class="form-group form-control" id="StatusKaryawan" disabled />
+                </dd>
+            </dl>
+            <dl class="dl-horizontal col-md-5">
+                <dt>
+                    <label>Role Map</label>
+                </dt>
+                <dd>
+                    <input class="form-group form-control" id="RoleMapName" type="text" disabled />
+                </dd>
+                <dt>
+                    <label>Start Employee</label>
+                </dt>
+
+                <dd>
+                    <input class="form-group form-control" id="StartEmploye" disabled />
+                </dd>
+
+                <dt>
+                    <label>Is Active</label>
+                </dt>
+
+                <dd>
+                    <input class="form-group form-control" id="IsActive" disabled />
+                </dd>
+
+                <dt>
+                    <label>Report To</label>
+                </dt>
+
+                <dd>
+                    <input class="form-group form-control" id="DirectReportId" disabled />
+                </dd>
+
+                <dt>
+                    Periode
+                </dt>
+
+                <dd>
+                    <input class="form-group form-control" name="Periode" id="Periode" readonly />
+                </dd>
+            </dl>
+        </div>
+    </div>
+    <div class="col-md-11"><label id="warning" style="font-weight:bold; color:red; font-size:larger"></label></div>
+    <div class="col-md-11">
+        <table id="TableReview" class="table table-responsive" hidden="hidden">
+            <tr id="TableHeader" style="white-space:nowrap" class="bg-light-blue-gradient" hidden="hidden">
+                <th colspan="2">Batch</th>
+                <th>
+                    Score
+                </th>
+                <th>
+                    Notes
+                </th>
+                <th style="width: 50px;">
+                    Upload File
+                </th>
+                <th>
+                    Weight
+                </th>
+                <th>
+                    Total
+                </th>
+            </tr>
+            <tr id="Perform" hidden="hidden">
+                <td style="font-weight:bold" id="PerformDesc" colspan="7"></td>
+            </tr>
+            <tr id="PerformDetail" hidden="hidden">
+                <td id="PerformDetailId"><input type="hidden" id="PerformDetId" class="PerformDetId" name="PerformDetId" hidden="hidden" /></td>
+                <td id="PerformDetailDesc"><input name="PerformDetailDesc" type="text" /></td>
+                <td id="Score">
+                    <select name="ScoreSelect" class="ScoreSelect form-group form-control" onchange="hitungTotal(this)">
+                        <option value="">Select score</option>
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                    </select>
+                </td>
+                <td id="Notes">
+                    <textarea id="NotesInput" class="NotesInput form-group form-control" style="width: 250px; height: 70px;" name="NotesInput" type="text"></textarea>
+                </td>
+                <td id="Upload">
+                    <input id="UploadFile" class="UploadFile" name="UploadFile" type="file"/>
+                </td>
+                <td class="Weight"></td>
+                <td class="Total"></td>
+            </tr>
+            <tr class="MaxTotal" hidden="hidden">
+                <td colspan="5">
+                    <strong>
+                        <label style="font-weight:bold">
+                            Total All
+                        </label>
+                    </strong>
+                </td>
+                <td class="MaxTotalWeight" style="font-weight:bold"></td>
+                <td class="MaxTotalValue" style="font-weight:bold"></td>
+            </tr>
+        </table>
+    </div>
+    <div class="col-md-12">
+        <div id="Button" style="display:none">
+            <div class="col-md-2" style="display:inline">
+                <button type="submit" id="submit" class="btn btn-primary">Submit</button>
+                <button class="btn btn-primary" onclick="location.href='@Url.Action("Index", "Mst_Performance_Review")'">Cancel</button>
+                <br />
+                <br />
+            </div>
+        </div>
+    </div>
+</form>
+@if (ViewBag.isopen == false)
+{
+    <script>
+        BootstrapDialog.alert('Maaf untuk periode @ViewBag.periode sudah habis, mohon request open tiket', function () {
+            window.location.href = "/task/index";
+        });
+                        //window.location.href = "/task/index";
+    </script>
+}
+@*<script src="~/Scripts/jquery.validate.js"></script>
+<script src="~/Scripts/additional-methods.js"></script>*@
+<script>
+    //$(document).ready(function () {
+    //    $("#FormReview").validate({
+    //        debug: true
+    //    });
+    //})
+
+    function getUserInfo(userid) {
+        if ($("#UserId").val() != "") {
+            $("#UserInfo").show();
+            $.ajax({
+                type: "GET",
+                url: "",
+                data: 'UserId=' + userid,
+                success: function (data) {
+
+                    $("#TableReview").show();
+                    $("#Button").show();
+                    $("#warning").text("");
+                    $("#FullName").val(data.datasemua.FullName);
+                    $("#RoleName").val(data.datasemua.Mst_Role.RoleName);
+                    $("#Email").val(data.datasemua.Email);
+                    $("#StatusKaryawan").val(data.datasemua.StatusKaryawan);
+                    $("#RoleMapName").val(data.datasemua.Mst_RoleMap.RoleMapName);
+                    var date = new Date(parseInt((data.datasemua.StartEmploye).substr(6)));
+                    var day = date.getDate();
+                    var month = date.getMonth();
+                    var year = date.getFullYear();
+                    var dateprint = day + "/" + month + "/" + year;
+                    $("#StartEmploye").val(dateprint);
+                    $("#IsActive").val(data.datasemua.IsActive);
+                    if (data.nama_r != "") {
+                        $("#DirectReportId").val(data.nama_r);
+                    } else {
+                        $("#DirectReportId").val("-");
+                    }
+                    $("#Periode").val(data.periode);
+
+                    if (data.exist == false) {
+                        getReview(data.datasemua.RoleMapId);
+                    } else {
+                        $("#warning").text("Anda sudah membuat review untuk user ini pada periode ini");
+                        $("#TableReview").hide();
+                        $("#Button").hide();
+                    }
+                }
+            });
+        } else {
+
+            $("input").val('');
+            $("#TableReview").hide();
+            $("#Button").hide();
+        }
+    }
+
+    function getReview(id) {
+        $("#TableReview #PerformDetail").not(":hidden").remove();
+        $("#TableReview #Perform").not(":hidden").remove();
+        $("#TableReview .MaxTotal").not(":hidden").remove();
+        $.ajax({
+            type: "GET",
+            url: "",
+            data: 'ReviewId=' + id,
+            success: function (data) {
+                $("#TableHeader").show();
+                $("#Perform").show();
+                $("#PerformDetail").show();
+                $(".MaxTotal").show();
+                var batch = "";
+                for (var i = 0; i < data.length; i++) {
+                    if (batch != data[i].Mst_Perform.PerformDesc) {
+                        console.log("-" + batch + "-");
+                        batch = data[i].Mst_Perform.PerformDesc;
+                        console.log("+" + batch + "+");
+                        $("#PerformDesc").last().text(batch);
+                        var row = $("#Perform").clone();
+                        $("#TableReview").append(row);
+                        i--;
+                    } else {
+                        $("#PerformDetailDesc").last().html(data[i].Detail_Description);
+                        $(".Weight").last(":visible").html(data[i].Weight);
+                        $("#PerformDetId").last().val(data[i].PerformDetailId);
+                        var scoreselect = $("#Score .ScoreSelect").last();
+                        scoreselect.attr("name", "ScoreSelect" + i);
+                        scoreselect.attr("id", "ScoreSelect" + i);
+                        var notes = $("#Notes .NotesInput").last();
+                        notes.attr("name", "NotesInput" + i);
+                        notes.attr("id", "NotesInput" + i);
+                        var performdetailid = $("#PerformDetailId .PerformDetId").last();
+                        performdetailid.attr("name", "PerformDetId" + i);
+                        var uploadfile = $("#Upload .UploadFile").last();
+                        uploadfile.attr("name", "UploadFile" + i);
+                        uploadfile.attr("id", "UploadFile" + i);
+                        var row = $("#PerformDetail").clone();
+                        $("#TableReview").append(row);
+                    }
+                }
+                var maxtotalhtml = $(".MaxTotal").clone();
+                $("#TableReview").append(maxtotalhtml);
+                cleanTable();
+                correctWeight();
+                setMaxWeight();
+                setValidation();
+                $("#Button").show();
+            }
+        });
+    }
+
+    function correctWeight() {
+        var i = 0;
+        var holder1 = "";
+        var holder2 = "";
+        var holderhidden = "";
+        $(".Weight").each(function () {
+            if ($(this).is(":visible")) {
+                holder1 = $(this).text();
+                $(this).text(holder2);
+                holder2 = holder1;
+            } else {
+                holderhidden = $(this).text();
+                console.log("else = "+holderhidden);
+            }
+        });
+        $("#TableReview").find(".Weight:visible:first").text(holderhidden);
+        console.log("outside = "+holderhidden);
+    }
+
+    function setMaxWeight() {
+        var maxweight = 0;
+        var i = 0;
+        $(".Weight").each(function () {
+            if($(this).is(":visible")){
+                var weight = $(this).text();
+                var weightint = parseInt(weight);
+                console.log("weightint = " + weightint);
+            }
+            if (!isNaN(weightint)) {
+                maxweight += weightint;
+            }
+            i++;
+        });
+        $(".MaxTotalWeight").not(":hidden").html(maxweight);
+        console.log("i = " + i);
+        console.log("maxweight = " + maxweight);
+    }
+
+    function setValidation() {
+        $("#FormReview").validate({
+            //debug: true
+        });
+        $.validator.addMethod('filesize', function (value, element, param) {
+            // param = size (en bytes) 
+            // element = element to validate (<input>)
+            // value = value of the element (file name)
+            return this.optional(element) || (element.files[0].size <= param)
+        });
+        $("[name^=ScoreSelect]").each(function () {
+            if ($(this).is(":visible")) {
+                $(this).rules("add", {
+                    required: true
+                });
+            } else {
+                $(this).attr("id", "ScoreSelect");
+                $(this).attr("name", "ScoreSelect");
+            }
+        });
+        $("[name^=NotesInput]").each(function () {
+            if ($(this).is(":visible")) {
+                $(this).rules("add", {
+                    maxlength: 255
+                });
+            } else {
+                $(this).attr("id", "NotesInput");
+                $(this).attr("name", "NotesInput");
+            }
+        });
+        $("[name^=UploadFile]").each(function () {
+            if ($(this).is(":visible")) {
+                $(this).rules("add", {
+                    extension: "doc|docx|pdf|xls|xlsx|ppt|pptx|iml|jpg|jpe|jpeg|png|bmp|gif|tif|tiff|txt|pic|pict|csv|rar|zip",
+                    filesize: 5242880,
+                    messages: {
+                        filesize: "Please select file smaler than 5 MB"
+                    }
+                });
+            } else {
+                $(this).attr("id", "UploadFile");
+                $(this).attr("name", "UploadFile");
+            }
+        });
+    }
+
+    function hitungTotal(scorehtml) {
+        var weight = $(scorehtml).closest("tr").children(".Weight").text();
+        var weightint = parseInt(weight);
+        var score = scorehtml.value;
+        var scoreint = parseInt(score);
+        var total = scoreint * weightint;
+        if (isNaN(total)) {
+            $(scorehtml).closest("tr").children(".Total").text("");
+        } else {
+            $(scorehtml).closest("tr").children(".Total").text(total);
+        }
+        hitungMaxTotalValue();
+        //console.log(score + " " + weight + " " + scoreint + " " + weightint);
+    }
+
+    function hitungMaxTotalValue() {
+        var maxtotal = 0;
+        $(".Total").each(function () {
+            var total = $(this).text();
+            total = total.replace(/\s/g, "");
+            console.log("total = " + total);
+            var totalint = 0;
+            if (total.length != 0) { totalint = parseInt(total) };
+            console.log("totalint = " + totalint);
+            if (!isNaN(totalint) && totalint.length != 0 ) { maxtotal += totalint };
+            console.log("maxtotal = " + maxtotal);
+        });
+        if (!isNaN(maxtotal)) {
+            $(".MaxTotalValue").html(maxtotal);
+        };
+    }
+
+    function cleanTable() {
+        $(".MaxTotal").first().hide();
+        $(".MaxTotalValue").text("");
+        $("#Perform").last().hide();
+        $("#PerformDetail").last().hide();
+
+    }
+
+</script>

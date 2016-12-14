@@ -1,0 +1,53 @@
+﻿@model IEnumerable<adminlte.Models.Mst_Role>
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h3 class="col-md-10">Master Role</h3>
+
+<p class="col-md-10">
+    <input type="button" value="Add New" class="btn btn-primary" onclick="location.href='@Url.Action("Create", "Mst_Role")'" />
+</p>
+<br />
+
+<div id="tbl" class="col-md-11">
+    <table class="table table-striped">
+        <thead class="bg-light-blue-gradient">
+            <tr>
+                <th>
+                    @Html.LabelFor(model => model.FirstOrDefault().RoleName, "Role")
+                </th>
+                <th>
+                    @Html.LabelFor(model => model.FirstOrDefault().IsActive, "Is Active")
+                </th>
+                <th><label>Actions</label></th>
+            </tr>
+        </thead>
+
+        @foreach (var item in Model)
+        {
+            <tr class="active">
+                <td>
+                    @Html.DisplayFor(modelItem => item.RoleName)
+                </td>
+                <td>
+                    @if (item.IsActive == true)
+                    {
+                        <span class="label label-success">Active</span>
+                    }
+                    else
+                    {
+                        <span class="label label-danger">Deactive</span>
+                    }
+                <td>
+                    @Html.ActionLink("Edit", "Edit", new { id = item.RoleId }) |
+                    @Html.ActionLink("Details", "Details", new { id = item.RoleId }) |
+                    @Html.ActionLink("Delete", "Delete", new { id = item.RoleId })
+                </td>
+            </tr>
+        }
+
+    </table>
+</div>

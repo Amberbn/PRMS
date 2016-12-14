@@ -1,0 +1,60 @@
+﻿@model IEnumerable<adminlte.Models.Mst_Perform_Detail>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h3 class="col-md-10">Master Performance Detail</h3>
+<p class="col-md-10">
+    <input type="button" value="Add New" class="btn btn-primary" onclick="location.href='@Url.Action("Create", "Mst_Perform_Detail")'" />
+</p>
+<div id="tbl" class="col-md-10">
+    <table class="table table-striped table-bordered">
+        <thead class="bg-light-blue-gradient">
+            <tr>
+                <th>
+                    @Html.LabelFor(model => model.FirstOrDefault().Mst_Perform.PerformDesc, "Performance")
+                    
+                </th>
+
+                <th>
+                    @Html.LabelFor(model => model.FirstOrDefault().Detail_Description, "Performance Detail")
+                   
+                </th>
+                <th>
+                    @Html.LabelFor(model => model.FirstOrDefault().Weight, "Weight")
+                   
+                </th>
+                <th>
+                    @Html.LabelFor(model => model.FirstOrDefault().Mst_Perform.Mst_RoleMap, "Role Map")
+                  
+                </th>
+                <th><label>Actions</label></th>
+            </tr>
+            </thead>
+
+            @foreach (var item in Model)
+            {
+                <tr class="active">
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Mst_Perform.PerformDesc)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Detail_Description)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Weight)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Mst_Perform.Mst_RoleMap.RoleMapName)
+                    </td>
+                    <td>
+                        @Html.ActionLink("Edit", "Edit", new { id = item.PerformDetailId }) |
+                        @Html.ActionLink("Details", "Details", new { id = item.PerformDetailId }) |
+                        @Html.ActionLink("Delete", "Delete", new { id = item.PerformDetailId })
+                    </td>
+                </tr>
+            }
+
+    </table>
+    </div>

@@ -1,0 +1,61 @@
+﻿@model IEnumerable<adminlte.Models.Mst_CommPlan> 
+
+@*
+    @if (Session["loginusername"] != null)
+    {
+        <text>
+            Username Anda @Session["level"].ToString()
+        </text>
+    }
+*@
+<h3 class="col-md-10">Master Commitment Plan</h3>
+
+
+    <p class="col-md-10">
+        <input type="button" value="Add New" class="btn btn-primary" onclick="location.href='@Url.Action("Create", "Mst_CommPlan")'" />
+    </p>
+
+<div id="tbl" class="col-md-10">
+    <table class="table table-striped table-bordered">
+        <thead class="bg-light-blue-gradient">
+            <tr>
+                <th>
+                    @Html.LabelFor(model => model.FirstOrDefault().CommPlanDesc, "Commitment Plan")
+                   
+
+                </th>
+                <th>
+                    @Html.LabelFor(model => model.FirstOrDefault().isActive, "Is Active")
+
+                </th>
+                <th><label>Actions</label></th>
+               
+            </tr>
+        </thead>
+
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.CommPlanDesc)
+                    </td>
+                    <td>
+                        @if (item.isActive == true)
+                        {
+                            <span class="label label-success">Active</span>
+                        }
+                        else
+                        {
+                            <span class="label label-danger">Deactive</span>
+                        }
+                    </td>
+                    <td>
+                        @Html.ActionLink("Edit", "Edit", new { id = item.CommPlanid }) |
+                        @Html.ActionLink("Details", "Details", new { id = item.CommPlanid }) |
+                        @Html.ActionLink("Delete", "Delete", new { id = item.CommPlanid })
+                    </td>
+                </tr>
+            }
+
+    </table>
+    </div>

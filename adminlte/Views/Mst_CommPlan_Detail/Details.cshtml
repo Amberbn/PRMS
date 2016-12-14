@@ -1,0 +1,37 @@
+﻿@model adminlte.Models.Mst_CommPlan_Detail
+
+<div>
+    <h3>Detail Commitment Plan Detail</h3>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+           @Html.LabelFor(model => model.Mst_CommPlan.CommPlanDesc,"Commitment plan")
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Mst_CommPlan.CommPlanDesc)
+        </dd>
+
+        <dt>
+           @Html.LabelFor(model => model.Mst_Role.RoleName,"Role")
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Mst_Role.RoleName)
+        </dd>
+
+        <dt>
+           @Html.LabelFor(model => model.Detail_Description,"Commitment Plan Desc")
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Detail_Description)
+        </dd>
+
+        <dt></dt>
+        <dd class="form-group">
+            <br />
+            <button type="button" value="Edit" class="btn btn-primary" onclick="location.href='@Url.Action("Edit", new { id = Model.CommPlanDetailId })'">Edit</button>
+            <button type="button" value="Back" class="btn btn-primary" onclick="location.href='@Url.Action("Index", "Mst_CommPlan_Detail")'">Cancel</button>
+</dl>
+</div>

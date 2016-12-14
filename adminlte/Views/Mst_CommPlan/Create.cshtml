@@ -1,0 +1,38 @@
+﻿@model adminlte.Models.Mst_CommPlan
+
+@using (Html.BeginForm()) 
+{
+    @Html.AntiForgeryToken()
+    
+    <div class="form-horizontal">
+        <h3>Master Commitment Plan</h3>
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <div class="form-group">
+            @Html.LabelFor(model => model.CommPlanDesc,"Commitment Plan", htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-3">
+                @Html.EditorFor(model => model.CommPlanDesc, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.CommPlanDesc, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.isActive, "Is active", htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-3">
+                @Html.EditorFor(model => model.isActive)
+                @Html.ValidationMessageFor(model => model.isActive, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        
+        <br />
+        <div class="form-group">
+            <div class="control-label col-md-2">
+            </div>
+            <div class="col-md-3">
+                <button type="submit" class="btn btn-primary">Create</button>
+                <button type="button" class="btn btn-primary" onclick="location.href='@Url.Action("Index", "Mst_CommPlan")'">Cancel</button>
+            </div>
+        </div>
+    </div>
+}
+

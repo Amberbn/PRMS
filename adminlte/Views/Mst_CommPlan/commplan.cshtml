@@ -1,0 +1,201 @@
+﻿@model IEnumerable<adminlte.Models.Mst_CommPlan_Detail>
+@if (ViewBag.ceksubmit == 0 && ViewBag.isopen == true)
+{
+    <form method="post" id="commitmentplan" enctype="multipart/form-data">
+
+        <div>
+            <h3 class="text-center">Commitment Plan</h3>
+            <hr />
+            <dl class="dl-horizontal col-md-5">
+                <dt class="form-group">
+                    <label>Role</label>
+                </dt>
+                <dd>
+                    <input type="text" class="col-md-12" value="@ViewBag.role" disabled>
+                </dd>
+                <dt class="form-group">
+                    <label>Periode</label>
+                </dt>
+                <dd>
+                    <input type="text" class="col-md-12" value="@ViewBag.cek" disabled>
+                    <input type="hidden" name="periode" value="@ViewBag.cek">
+                </dd>
+                <dt class="form-group">
+                    <label>Report To</label>
+                </dt>
+                <dd>
+                    <input type="text" value="@ViewBag.report" class="col-md-12" disabled>
+                </dd>
+            </dl>
+        </div>
+        <div id="tbl" class="col-md-11">
+            <table class="table table-striped table-bordered" style="white-space:nowrap">
+                <thead class="bg-light-blue-gradient">
+                    <tr>
+                        <th class="col-lg-2">
+                            Batch
+                        </th>
+                        <th class="col-lg-3">
+                            Detail
+                        </th>
+                        <th class="col-lg-2">
+                            Result
+                        </th>
+                        <th class="col-lg-1">
+                            Upload File
+                        </th>
+                        <th class="col-lg-1">
+                            Delete
+                        </th>
+                    </tr>
+                </thead>
+                @{ var i = 0;
+                    var idParent = 0;}
+                @foreach (var category in Model.Select(x => x.Mst_CommPlan).Distinct())
+                {
+                    idParent++;
+                    <tr>
+                        <td colspan="3">
+                            @category.CommPlanDesc
+                        </td>
+
+                        <td colspan="4">
+                            <a class="btn btn-primary" id="btnRow_@idParent" onclick="javascript:addRow(this.id);">Add Row</a>
+                        </td>
+
+                    </tr>
+
+                    var a = 0;
+                    <tbody id="kategor_@idParent">
+                        @foreach (var subcategory in Model.Where(x => category.CommPlanid == x.CommPlanid))
+                    {
+                        string detail = "detail_" + i;
+                        string resultan = "resultan_" + i;
+                        string complaind = "complainid_" + i;
+                        string file = "file_" + i;
+                        i++;
+                        a++;
+                        string cat = "kategori_" + a;
+
+                            <tr id="@cat">
+                                <td><input name="@complaind" type="hidden" value="@category.CommPlanid" /></td>
+                                <td>
+                                    <textarea name=@detail id=@detail style="margin: 0px 0px 9.97685px; width: 250px; height: 70px;"> @subcategory.Detail_Description</textarea>
+
+                                </td>
+                                <td>
+                                    <select name=@resultan id=@resultan class="form-group form-control">
+                                        <option value="On Progress">On Progress</option>
+                                        <option value="Achieve">Achieve</option>
+                                        <option value="Not Achived">Not Achived</option>
+                                    </select>
+                                </td>
+                                <td>
+                                    <input type="file" name=@file id=@file style="width:175px">
+                                </td>
+
+                                <td>
+                                    <a class="btn btn-xs btn-primary delete">Hapus</a>
+                                </td>
+
+                            </tr>
+
+
+                        }
+                    </tbody>
+                }
+            </table>
+            <br />
+            <div class="control-group">
+                <div class="col-md-offset-0">
+                    @if (ViewBag.hitung != 0 && ViewBag.ceksubmit == 0)
+                {
+                        <button type="submit" id="save" name="save" class="pull-right">Save</button>
+                        <button type="submit" id="submit" name="submit" class="pull-right">Submit</button>
+                        <input type="hidden" id="check" value="" name="check" />
+                    }
+                </div>
+            </div>
+
+        </div>
+    </form>
+                    }
+@if (ViewBag.ceksubmit != 0)
+{
+    <script>
+        BootstrapDialog.alert('Anda sudah membuat Commitment Plan untuk Periode @ViewBag.cek', function () {
+            window.location.href = "/task/index";
+        });
+                        //window.location.href = "/task/index";
+    </script>
+}
+@if (ViewBag.isopen == false)
+{
+    <script>
+        BootstrapDialog.alert('Maaf untuk periode @ViewBag.cek sudah habis, mohon request open tiket', function () {
+            window.location.href = "/task/index";
+        });
+                        //window.location.href = "/task/index";
+    </script>
+}
+<script type="text/javascript">
+
+        $("#commitmentplan").validate({ errorElement: 'div' });
+    $(".delete").click(function (e) {
+        e.preventDefault();
+        $(this).closest("tr").remove();
+        AutoNumber()
+    });
+
+    function AutoNumber() {
+        $("tr[id^='kategor']").each(function (ia) {
+            $(this).find("textarea[name*='detail_']").attr("name", "detail_" + ia).attr("id", "detail_" + ia);
+            $(this).find("select[name*='resultan_']").attr("name", "resultan_" + ia).attr("id", "resultan_" + ia);
+            $(this).find("input[name*='complainid_']").attr("name", "complainid_" + ia);
+            $(this).find("input[name*='file_']").attr("name", "file_" + ia).attr("id", "file_" + ia);
+
+            $("textarea[name^='detail_']").each(function () {
+                $(this).rules("add", {
+                    required: true,
+                    messages: {
+                        required: "Harap Masukan Text"
+                    }
+                });
+            });
+
+            $("input[name^='file_']").each(function () {
+                $(this).rules("add", {
+                    extension: "doc|docx|pdf|xls|xlsx|ppt|pptx|iml|jpg|jpe|jpeg|png|bmp|gif|tif|tiff|pic|pict|csv|rar|zip|txt",
+                    messages: {
+                        extension: "Invalid file extension"
+                    }
+                });
+            });
+
+        });
+    }
+
+
+    var data="";
+    function addRow(e) {
+        var id = e.substring(6);
+        var idbody = "kategor" + id;
+        $("#kategor" + id).children("tr").last().clone().appendTo("#kategor" + id);
+        var detail = $("#kategor" + id).find("textarea").last();
+        detail.val("");
+        $(".delete").click(function (e) {
+            e.preventDefault();
+            $(this).closest("tr").remove();
+            AutoNumber()
+        });
+        AutoNumber()
+    }
+
+    AutoNumber()
+    $("#save").click(function () {
+        $("#check").val(1);
+    });
+    $("#submit").click(function () {
+        $("#check").val(2);
+    });
+</script>

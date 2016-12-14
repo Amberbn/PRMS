@@ -1,0 +1,262 @@
+﻿@model List<adminlte.Models.Trx_Perform_Review>
+
+@{
+    int pId = -1;
+
+    List<SelectListItem> ScoreList = new List<SelectListItem>();
+    ScoreList.Add(new SelectListItem { Text = "Select Score", Value = "" });
+    ScoreList.Add(new SelectListItem { Text = "1", Value = "1" });
+    ScoreList.Add(new SelectListItem { Text = "2", Value = "2" });
+    ScoreList.Add(new SelectListItem { Text = "3", Value = "3" });
+    ScoreList.Add(new SelectListItem { Text = "4", Value = "4" });
+    ScoreList.Add(new SelectListItem { Text = "5", Value = "5" });
+
+    List<SelectListItem> PeriodeList = new List<SelectListItem>();
+    PeriodeList.Add(new SelectListItem { Text = "Select Periode", Value = "" });
+    PeriodeList.Add(new SelectListItem { Text = "April", Value = "April" });
+    PeriodeList.Add(new SelectListItem { Text = "Oktober", Value = "Oktober" });
+}
+@using (Html.BeginForm("Edit", "Mst_Performance_Review", FormMethod.Post, new { name = "FormReview", id = "FormReview", enctype = "multipart/form-data" }))
+{
+
+    <input type="hidden" name="TaskId" value="@Model[0].TaskId" />
+    <h3>Performance Review Edit</h3>
+    <br />
+    <dl class="dl-horizontal col-md-5">
+        <dt style="font-weight:bold">
+            Review By
+        </dt>
+
+        <dd>
+            <input type="text" class="form-control form-group col-md-3" name="ReviewByName" value="@ViewBag.ReviewByName" disabled="disabled" />
+            <input type="hidden" name="ReviewBy" value="@Model[0].ReviewBy" />
+        </dd>
+
+        <dt style="font-weight:bold">
+            Review For
+        </dt>
+
+        <dd>
+            <input type="text" class="form-control form-group col-md-3" name="ReviewForName" value="@ViewBag.ReviewForName" disabled="disabled" />
+            <input type="hidden" name="ReviewFor" value="@Model[0].ReviewFor" />
+        </dd>
+
+        <dt style="font-weight:bold">
+            Periode
+        </dt>
+
+        <dd>
+            @Html.TextBoxFor(model => Model[0].Periode, new { @class = "form-control form-group", @readonly = "readonly" })
+        </dd>
+    </dl>
+
+    <div class="col-md-11">
+        <table class="table">
+            <thead class="bg-light-blue-gradient">
+                <tr>
+                    <th>
+                        Batch
+                    </th>
+                    <th></th>
+                    <th>
+                        Description
+                    </th>
+                    <th>
+                        Score
+                    </th>
+                    <th>
+                        Notes
+                    </th>
+                    <th>
+                        Action
+                    </th>
+                    <th>
+                        Weight
+                    </th>
+                    <th>
+                        Total
+                    </th>
+                </tr>
+            </thead>
+
+            @for (int i = 0; i < Model.Count(); i++)
+            {
+                if (pId != Model[i].Mst_Perform_Detail.PerformId)
+                {
+                    pId = Model[i].Mst_Perform_Detail.PerformId;
+                    <tr>
+                        <td colspan="6" style="font-weight:bold">
+                            @Html.DisplayFor(modelItem => Model[i].Mst_Perform_Detail.Mst_Perform.PerformDesc)
+                        </td>
+                    </tr>
+                    i--;
+                }
+                else
+                {
+                    <tr>
+                        <td>
+                            @Html.HiddenFor(modelItem => Model[i].PerformDetailId)
+                        </td>
+                        <td>
+                            @Html.HiddenFor(modelItem => Model[i].TrxId)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => Model[i].Mst_Perform_Detail.Detail_Description)
+                        </td>
+                        <td class="Score">
+                            @Html.DropDownListFor(modelItem => Model[i].Score, new SelectList(ScoreList, "Value", "Text", Model[i].Score), new { @class = "form-control form-group" ,@width = "70px"})
+                            @Html.ValidationMessageFor(modelItem => Model[i].Score, "", new { @class = "text-danger" })
+                        </td>
+                        <td>
+                            @Html.TextAreaFor(modelItem => Model[i].Notes, new { @class = "form-control form-group" })
+                        </td>
+                        @if (Model[i].FileName != "")
+                        {
+                            <td class="Delete">
+                                <a onclick="DeleteFile(this)">Delete</a>
+                                @Html.ActionLink("Download", "Download", "Mst_Performance_Review", new { FileName = Model[i].FileName, TaskId = Model[i].TaskId }, null)
+                            </td>
+                            <td class="File" hidden>
+                                @Html.TextBoxFor(modelItemFor => Model[i].FileName, new { @type = "file" })
+                            </td>
+                        }
+                        else
+                        {
+                            <td class="Delete" hidden></td>
+                            <td class="File">
+                                @Html.TextBoxFor(modelItemFor => Model[i].FileName, new { @type = "file" })
+                            </td>
+                        }
+                        <td class="Weight">
+                            @Html.DisplayFor(modelItemFor => Model[i].Mst_Perform_Detail.Weight)
+                        </td>
+                        <td class="TotalRow">
+                            0
+                        </td>
+                    </tr>
+
+                }
+
+            }
+            <tr>
+                <td colspan="6" style="font-weight:bold">
+                    Total All
+                </td>
+                <td id="TotalWeight" style="font-weight:bold">
+                    0
+                </td>
+                <td id="TotalAll" style="font-weight:bold">
+                    0
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div class="col-md-11"><span style="font-weight:bold">Komentar :</span><label id="komentar">@ViewBag.Comment</label></div>
+    <div class="col-md-11">
+        <div class="col-md-2" style="display:inline">
+            <button type="submit" class="btn btn-primary" value="Submit">Submit</button>
+        </div>
+    </div>
+    <br />
+    <br />
+}
+<script>
+    $("#FormReview").validate();
+    $.validator.addMethod('filesize', function (value, element, param) {
+        // param = size (en bytes) 
+        // element = element to validate (<input>)
+        // value = value of the element (file name)
+        return this.optional(element) || (element.files[0].size <= param)
+    });
+    $("[name$=FileName]").each(function () {
+        $(this).rules("add", {
+            extension: "doc|docx|pdf|xls|xlsx|ppt|pptx|iml|jpg|jpe|jpeg|png|bmp|gif|tif|tiff|txt|pic|pict",
+            filesize: 5242880,
+            messages: {
+                filesize: "Please select file smaler than 5 MB"
+            }
+        });
+    });
+    $(".Score").each(function () {
+        var selecthtml = $(this).find("select");
+        $(selecthtml).change(function () {
+            hitungTotal(this);
+        })
+    });
+    $(".TotalRow").each(function () {
+        var score = $(this).closest("tr").find("select").val();
+        console.log("score = " + score);
+        var weight = $(this).closest("tr").children(".Weight").text();
+        console.log("weight = " + weight);
+        $(this).text(score * weight);
+    });
+    $("[name$=Notes]").each(function () {
+        $(this).rules("add", {
+            maxlength: 255
+        });
+    });
+    $("#TotalAll").each(function () {
+        var total = 0;
+        $(".TotalRow").each(function () {
+            total += parseInt($(this).text());
+            console.log("total = " + total);
+        });
+        $(this).text(total);
+    });
+    $("#TotalWeight").each(function () {
+        var total = 0;
+        $(".Weight").each(function () {
+            total += parseInt($(this).text());
+            console.log("total = " + total);
+        });
+        $(this).text(total);
+    });
+    //});
+
+    function DeleteFile(deletehtml) {
+        var trxid = $(deletehtml).closest("tr").find("td input[name$=TrxId]").val();
+        console.log("TrxId = " + trxid);
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("Delete","Mst_Performance_Review")',
+            data: 'TrxId=' + trxid,
+            success: function (data) {
+                $(deletehtml).closest("td").hide();
+                $(deletehtml).closest("tr").find(".File").show();
+            }
+        });
+    }
+
+    function hitungTotal(scorehtml) {
+        var weight = $(scorehtml).closest("tr").children(".Weight").text();
+        var weightint = parseInt(weight);
+        var score = $(scorehtml).val();
+        var scoreint = parseInt(score);
+        var total = scoreint * weightint;
+        if (isNaN(total)) {
+            $(scorehtml).closest("tr").children(".TotalRow").text("");
+        } else {
+            $(scorehtml).closest("tr").children(".TotalRow").text(total);
+        }
+        hitungMaxTotalValue();
+    }
+
+    function hitungMaxTotalValue() {
+        var maxtotal = 0;
+        $(".TotalRow").each(function () {
+            if ($(this).is(":visible")) {
+                var total = $(this).text();
+                total = total.replace(/\s/g, "");
+                console.log("total = " + total);
+                var totalint = 0;
+                if (total.length != 0) { totalint = parseInt(total) };
+                console.log("totalint = " + totalint);
+                if (!isNaN(totalint) && totalint.length != 0) { maxtotal += totalint };
+                console.log("maxtotal = " + maxtotal);
+            }
+        });
+        if (!isNaN(maxtotal)) {
+            $("#TotalAll").html(maxtotal);
+        };
+    }
+</script>

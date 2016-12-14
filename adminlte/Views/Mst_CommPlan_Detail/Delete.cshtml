@@ -1,0 +1,45 @@
+﻿@model adminlte.Models.Mst_CommPlan_Detail
+
+<h3>Are you sure you want to delete this?</h3>
+<div>
+  
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+           @Html.LabelFor(model => model.Mst_CommPlan.CommPlanDesc,"Commitment plan")
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Mst_CommPlan.CommPlanDesc)
+        </dd>
+
+        <dt>
+           @Html.LabelFor(model => model.Mst_Role.RoleName, "Role")
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Mst_Role.RoleName)
+        </dd>
+
+        <dt>
+           @Html.LabelFor(model => model.Detail_Description, "Commitment Plan Desc")
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Detail_Description)
+        </dd>
+
+    </dl>
+
+    @using (Html.BeginForm()) {
+        @Html.AntiForgeryToken()
+
+        <dl class="dl-horizontal">
+            <dt></dt>
+            <dd class="form-group">
+                <button type="submit" value="Delete" class="btn btn-primary">Delete</button>
+                <button type="button" value="Back" class="btn btn-primary" onclick="location.href='@Url.Action("Index", "Mst_CommPlan_Detail")'">Cancel</button>
+            </dd>
+        </dl>
+    }
+</div>

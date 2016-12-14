@@ -1,0 +1,34 @@
+﻿@model adminlte.Models.Mst_CommPlan
+
+    <h3>Detail Commitment Plan</h3>
+<div>
+    
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+           @Html.LabelFor(model => model.CommPlanDesc,"Commitment Plan")
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.CommPlanDesc)
+        </dd>
+
+        <dt>
+           @Html.LabelFor(model => model.isActive,"is Active")
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.isActive)
+        </dd>
+
+        <dt></dt>
+        <dd class="form-group">
+            <br />
+            <button type="button" value="Edit" class="btn btn-primary" onclick="location.href='@Url.Action("Edit", new { id = Model.CommPlanid })'">Edit</button>
+            <button type="button" value="Back" class="btn btn-primary" onclick="location.href='@Url.Action("Index", "Mst_CommPlan")'">Cancel</button>
+        </dd>
+
+    </dl>
+</div>
+
+
