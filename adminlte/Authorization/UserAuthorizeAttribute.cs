@@ -10,7 +10,7 @@ namespace adminlte.Authorization
     {
         protected override bool AuthorizeCore(HttpContextBase httpContext)
         {
-            if (httpContext.Session["loginuserid"] != null)
+            if (httpContext.Session["loginuserid"] != null&& httpContext.Session["level"]!=null)
             {
                return true;
             }

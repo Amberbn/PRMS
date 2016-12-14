@@ -6,6 +6,7 @@ using System.Web;
 using System.Web.Mvc;
 using adminlte.Models;
 using adminlte.Context;
+using System.Web.Security;
 
 namespace adminlte.Controllers
 {
@@ -52,8 +53,12 @@ namespace adminlte.Controllers
 
         public ActionResult Logout()
         {
-            HttpContext.Session.RemoveAll();
-            return View();
+            FormsAuthentication.SignOut();
+            Session.RemoveAll();
+            Session.Clear();
+            Session["loginuserid"] = null;
+            Session["level"] = null;
+            return RedirectToAction("Login","PRMS");
         }
     }
 }

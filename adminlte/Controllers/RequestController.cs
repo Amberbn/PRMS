@@ -17,6 +17,7 @@ namespace adminlte.Controllers
         Mst_UserDataContext db = new Mst_UserDataContext();
         SendEmail send = new SendEmail();
         // GET: Request/Create
+        [UserAuthorize]
         public ActionResult Create()
         {
             return View();
